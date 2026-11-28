@@ -1,0 +1,40 @@
+# Cloudflare Workers static-assets headers (copied to build/web/_headers by
+# `flutter build web`). Rules match URL paths; later rules add to earlier ones.
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Entry points and the service worker must always be revalidated so a new
+# release is picked up on the next visit.
+/
+  Cache-Control: no-cache
+/index.html
+  Cache-Control: no-cache
+/flutter_service_worker.js
+  Cache-Control: no-cache, no-store, must-revalidate
+/flutter_bootstrap.js
+  Cache-Control: no-cache
+/flutter.js
+  Cache-Control: no-cache
+/main.dart.js
+  Cache-Control: no-cache
+/main.dart.wasm
+  Cache-Control: no-cache
+/main.dart.mjs
+  Cache-Control: no-cache
+/version.json
+  Cache-Control: no-cache
+/manifest.json
+  Cache-Control: no-cache
+
+# Flutter's output file names are not content-hashed, so other assets get a
+# short cache with revalidation rather than "immutable". (Rules must not
+# overlap on Cache-Control: Cloudflare would join both values.)
+/assets/*
+  Cache-Control: public, max-age=3600, must-revalidate
+/icons/*
+  Cache-Control: public, max-age=604800
+/canvaskit/*
+  Cache-Control: public, max-age=604800

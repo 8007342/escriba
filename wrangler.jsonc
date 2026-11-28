@@ -1,0 +1,27 @@
+// Cloudflare Workers configuration for Escriba.
+// Static assets only: there is no Worker script. Cloudflare serves the
+// Flutter web build from ./build/web and falls back to index.html for
+// unknown paths (single-page app). Headers come from build/web/_headers
+// (source: web/_headers).
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "escriba",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./build/web",
+    "not_found_handling": "single-page-application"
+  },
+  // Custom domain: requires tlatoani.net to be a zone in the same
+  // Cloudflare account. Wrangler creates the DNS record and certificate on
+  // the first deploy.
+  "routes": [
+    { "pattern": "escriba.tlatoani.net", "custom_domain": true }
+  ],
+  // Keep the escriba.<account>.workers.dev URL (and preview URLs for
+  // non-production branch builds) available alongside the custom domain.
+  "workers_dev": true,
+  "preview_urls": true,
+  "observability": {
+    "enabled": true
+  }
+}

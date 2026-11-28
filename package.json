@@ -1,0 +1,15 @@
+{
+  "name": "escriba",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Escriba: handwriting and foreign-alphabet practice PWA (Flutter web on Cloudflare Workers static assets)",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "build": "bash scripts/cf-build.sh",
+    "deploy": "wrangler deploy",
+    "preview": "wrangler dev"
+  },
+  "devDependencies": {
+    "wrangler": "4.162.0"
+  }
+}
