@@ -18,9 +18,10 @@ Cloudflare.
 | `web/_headers` | Copied to `build/web/_headers`; cache headers (`no-cache` for `index.html`, `flutter_service_worker.js`, bootstrap/main JS) |
 
 Cloudflare's build image does not include Flutter, which is why the build
-script fetches a pinned SDK itself. The first build takes a few extra minutes
-for the ~1 GB SDK download; later builds reuse it when Cloudflare's build
-cache keeps `.cache/`.
+script fetches a pinned SDK itself. Expect every build to download the
+~1.5 GB SDK archive (Workers Builds' cache is not guaranteed to keep
+`.cache/`); a full build takes a few minutes, well inside the free tier's
+per-build time limit, but it counts against the monthly build minutes.
 
 ## Prerequisite: the custom domain
 

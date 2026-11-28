@@ -13,6 +13,14 @@ Future<void> _pumpAt(WidgetTester tester, Size size) async {
   await tester.pump(const Duration(milliseconds: 300));
 }
 
+/// Lets the page cross-fade (AnimatedSwitcher) finish so only one page,
+/// and one title, remains.
+Future<void> _settleSwitch(WidgetTester tester) async {
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 300));
+  await tester.pump();
+}
+
 String _pageTitle(WidgetTester tester) =>
     tester.widget<Text>(find.byKey(const Key('page-title'))).data!;
 
@@ -28,12 +36,12 @@ void main() {
   testWidgets('tapping a sticky note switches the notepad page', (tester) async {
     await _pumpAt(tester, const Size(1280, 800));
     await tester.tap(find.byKey(const Key('note-alphabets')));
-    await tester.pump(const Duration(milliseconds: 300));
+    await _settleSwitch(tester);
     expect(_pageTitle(tester), 'Alphabets');
     expect(find.textContaining('Greek'), findsOneWidget);
 
     await tester.tap(find.byKey(const Key('note-settings')));
-    await tester.pump(const Duration(milliseconds: 300));
+    await _settleSwitch(tester);
     expect(_pageTitle(tester), 'Settings');
   });
 
@@ -41,7 +49,14 @@ void main() {
     await _pumpAt(tester, const Size(400, 860));
     expect(tester.takeException(), isNull);
     await tester.tap(find.byKey(const Key('note-progress')));
-    await tester.pump(const Duration(milliseconds: 300));
+    await _settleSwitch(tester);
     expect(_pageTitle(tester), 'Progress');
   });
+
+  for (final size in const [Size(1024, 600), Size(800, 360), Size(360, 640)]) {
+    testWidgets('lays out without overflow at $size', (tester) async {
+      await _pumpAt(tester, size);
+      expect(tester.takeException(), isNull);
+    });
+  }
 }
